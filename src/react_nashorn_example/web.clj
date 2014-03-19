@@ -63,11 +63,16 @@
         optimizer (if (= :dev (:env config))
                     optimizations/none
                     optimizations/all)]
+    ;; TODO: Use this stuffs to get http stuffs?
+    ; (.eval nashorn "var http = Java.type('react_nashorn_example.js_http_client')")
+    ;;(println (.eval nashorn "http.wat(1)"))
+
     ;; React expects either 'window' or 'global' to be around.
     (.eval nashorn "var global = this")
+
+
     (doseq [asset (optimizer (get-backend-assets) {})]
       (.eval nashorn (or (:contents asset) (clojure.java.io/reader (:resource asset)))))
-
     (->
      (fn [req]
        (if-let [react-html (get-react-html (:uri req) nashorn)]

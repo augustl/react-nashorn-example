@@ -9,4 +9,5 @@
                  [hiccup "1.0.5"]
                  [optimus "0.14.2"]
                  [org.clojure/tools.nrepl "0.2.2"]]
+  :aot [react-nashorn-example.js-http-client]
   :aliases {"server" ["run" "-m" "react-nashorn-example.cli/run" "4567"]})
