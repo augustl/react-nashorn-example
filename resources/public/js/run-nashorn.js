@@ -4,9 +4,9 @@
     var app = MyApp.create();
 
     GLOBAL.__RENDER_PAGE = function (url) {
-        var component = app.getComponent(url, null);
-        if (component) {
-            return React.renderComponentToString(component)
+        var route = app.matchRoute(url);
+        if (route) {
+            return React.renderComponentToString(route.createComponent())
         }
     };
 

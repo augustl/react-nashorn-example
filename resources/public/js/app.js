@@ -54,18 +54,33 @@
                 }
             });
 
-            app.getComponent = function (url, state) {
+            app.matchRoute = function (url) {
                 if (url === "/") {
-                    return HomePageComponent({});
+                    return {
+                        createComponent: function () {
+                            return HomePageComponent({})
+                        },
+                        params: {}
+                    }
                 }
 
                 var match = url.match(/^\/people\/([^\/]+)$/);
                 if (match) {
                     var personId = match[1];
-                    return PersonShowComponent({person: {id: personId}})
+                    return {
+                        createComponent: function () {
+                            return PersonShowComponent({person: {id: personId}})
+                        },
+                        params: {personId: personId}
+                    }
                 }
 
-                return app.getNotFoundComponent();
+                return {
+                    createComponent: function () {
+                        return app.getNotFoundComponent();
+                    },
+                    params: {}
+                }
             };
 
             app.getNotFoundComponent = function () {

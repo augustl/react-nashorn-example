@@ -11,10 +11,10 @@
     }
 
     app.onLocationChangeRequested = function (url) {
-        var component = app.getComponent(url, null);
+        var route = app.matchRoute(url);
 
-        if (component) {
-            renderComponent(component);
+        if (route) {
+            renderComponent(route.createComponent());
             history.pushState(null, null, url);
         } else {
             renderNotFound();
@@ -22,9 +22,9 @@
     };
 
     function renderCurrentPath() {
-        var component = app.getComponent(location.pathname, null);
-        if (component) {
-            renderComponent(component);
+        var route = app.matchRoute(location.pathname);
+        if (route) {
+            renderComponent(route.createComponent());
         } else {
             renderNotFound();
         }
