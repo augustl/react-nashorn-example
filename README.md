@@ -16,6 +16,7 @@ Then open http://localhost:4567 in a browser, and enjoy!
 
 ## TODO
 
+* Use a real router, not a simple if/return/regexp based home made thingie.
 * Actually get component state from API on server. We currently hardcode {id: personId}.
 
 ## Copyright
