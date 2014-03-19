@@ -12,7 +12,7 @@
             });
 
             var PersonLinkComponent = React.createClass({
-                handleClick: function (e) {
+                gotoPerson: function (e) {
                     e.preventDefault();
                     app.onLocationChangeRequested(this.getPath());
                 },
@@ -21,7 +21,7 @@
                 },
                 render: function () {
                     return React.DOM.a(
-                        {onClick: this.handleClick, href: this.getPath()},
+                        {onClick: this.gotoPerson, href: this.getPath()},
                         "Go to person " + this.props.person.id);
                 }
             });
@@ -39,8 +39,18 @@
             });
 
             var PersonShowComponent = React.createClass({
+                gotoHome: function (e) {
+                    e.preventDefault();
+                    app.onLocationChangeRequested(this.getHomePath())
+                },
+                getHomePath: function () {
+                    return "/";
+                },
                 render: function () {
-                    return React.DOM.h1(null,"A person is a person. " + this.props.person.id);
+                    return React.DOM.div(
+                        null,
+                        React.DOM.h1(null, "A person is a person. " + this.props.person.id),
+                        React.DOM.a({onClick: this.gotoHome, href: this.getHomePath()}, "Back"));
                 }
             });
 
