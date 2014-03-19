@@ -41,13 +41,17 @@
     (map (fn [url] [:script {:src url}])
          (link/bundle-paths req ["app.js" "browser.js"]))]))
 
+(defn nashorn-bindings-append
+  [nashorn new-bindings]
+  (let [bindings (.createBindings nashorn)]
+    (doseq [[key value] new-bindings]
+      (.put bindings key value))
+    (.putAll bindings (.getBindings nashorn ScriptContext/ENGINE_SCOPE))
+    bindings))
+
 (defn get-react-html
   [uri nashorn]
-  (.eval nashorn
-         "__RENDER_PAGE(url)"
-         (doto (.createBindings nashorn)
-           (.put "url" uri)
-           (.putAll (.getBindings nashorn ScriptContext/ENGINE_SCOPE)))))
+  (.eval nashorn "__RENDER_PAGE(url)" (nashorn-bindings-append nashorn {"url" uri})))
 
 (defn get-react-not-found-page
   [nashorn]
