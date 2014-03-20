@@ -63,10 +63,11 @@
 
         if (match) {
             renderRouteMatch(match);
-            history.pushState(null, null, url);
         } else {
             renderNotFound();
         }
+
+        history.pushState(null, null, url);
     };
 
     function renderCurrentPath() {
