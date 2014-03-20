@@ -62,19 +62,18 @@
 
 (defn create-app
   [config]
-  (let [optimizer (if (= :dev (:env config))
-                    optimizations/none
-                    optimizations/all)
-        nashorn (nashorn-utils/create-engine
+  (let [nashorn (nashorn-utils/create-engine
                  (map #(or (:contents %) (clojure.java.io/reader (:resource %)))
-                      (optimizer (get-backend-assets) {})))]
+                      (get-backend-assets)))]
     (->
      (compose-ring-handlers
       web-api/handler
       (-> (partial web-handler nashorn)
           (optimus/wrap
            get-frontend-assets
-           optimizer
+           (if (= :dev (:env config))
+             optimizations/none
+             optimizations/all)
            (if (= :dev (:env config))
              strategies/serve-live-assets
              strategies/serve-frozen-assets))))
