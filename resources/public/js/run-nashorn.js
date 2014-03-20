@@ -3,15 +3,11 @@
 
     var app = MyApp.create();
     var apiFetcher = Java.type('react_nashorn_example.js_api_fetcher')
+    var HashMap = Java.type("java.util.HashMap");
 
     function mapToHashMap(map) {
-        var HashMap = Java.type("java.util.HashMap");
         var result = new HashMap();
-        for (var prop in map) {
-            if (map.hasOwnProperty(prop)) {
-                result.put(prop, map[prop]);
-            }
-        }
+        result.putAll(map);
         return result;
     }
     function getProps(urls) {
