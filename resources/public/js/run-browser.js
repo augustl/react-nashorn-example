@@ -58,26 +58,23 @@
         );
     };
 
-    app.onLocationChangeRequested = function (url) {
-        var match = app.router.match(url);
+    function renderPath(path) {
+        var match = app.router.match(path);
 
         if (match) {
             renderRouteMatch(match);
         } else {
             renderNotFound();
         }
+    };
 
+    app.onLocationChangeRequested = function (url) {
+        renderPath(url);
         history.pushState(null, null, url);
     };
 
     function renderCurrentPath() {
-        var match = app.router.match(location.pathname);
-
-        if (match) {
-            renderRouteMatch(match);
-        } else {
-            renderNotFound();
-        }
+        renderPath(location.pathname);
     };
 
     window.addEventListener("popstate", function(e) {
