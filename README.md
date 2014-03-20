@@ -24,7 +24,7 @@ Use your package manager!
 
 Alternatively, if you don't want to replace your system java, do the following:
 
-* curl -LO -b oraclelicense=a http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.tar.g
+* curl -LO -b oraclelicense=a http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.tar.gz
 * Extract
 * export PATH=/path/to/jdk1.8.0/bin:$PATH
 
