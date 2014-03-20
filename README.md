@@ -36,6 +36,12 @@ Please contribute a pull request :)
 
 Please contribute a pull request :)
 
+## Tradeoffs
+
+Your React code has to use plain JS only, and not invoke any 3rd party components that requires a DOM. Facebook React supports rendering to string without a DOM, which is what we actually do on the back-end. If a component invokes a jQuery plugin, you'll get an exception and the backend won't be able to render that page.
+
+I'm not an experienced React user, so I'm not sure how this problem is typically solved. Pull requests are welcome.
+
 ## TODO
 
 * Use a real router, not a simple if/return/regexp based home made thingie.
