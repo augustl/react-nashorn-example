@@ -2,7 +2,7 @@
     "use strict";
 
     var app = MyApp.create();
-    var http = Java.type('react_nashorn_example.js_http_client')
+    var apiFetcher = Java.type('react_nashorn_example.js_api_fetcher')
 
     function urlsToHashMap(urls) {
         var HashMap = Java.type("java.util.HashMap");
@@ -16,7 +16,7 @@
     }
     function getProps(route) {
         if (route.urls) {
-            var res = http.resolveUrls(urlsToHashMap(route.urls));
+            var res = apiFetcher.resolveUrls(urlsToHashMap(route.urls));
             var parsedRes = {};
             for (var prop in res) {
                 parsedRes[prop] = JSON.parse(res[prop])

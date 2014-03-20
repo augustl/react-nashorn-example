@@ -1,10 +1,12 @@
-(ns react-nashorn-example.js-http-client
+(ns react-nashorn-example.js-api-fetcher
   (:require react-nashorn-example.web-api)
   (:import [java.util Map HashMap])
   (:gen-class
    :methods [^{:static true} [resolveUrls [java.util.Map] java.util.Map]]))
 
 (defn fetch
+  "This code runs in the same process as the server itself, so we don't do an actual HTTP
+   request. We just invoke our API http handler, which is a plain Clojure function."
   [urls]
   (pmap
    (fn [[prop url]]

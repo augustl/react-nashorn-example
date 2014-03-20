@@ -11,5 +11,5 @@
                  [org.clojure/tools.nrepl "0.2.2"]
                  [compojure "1.1.6"]
                  [cheshire "5.3.1"]]
-  :aot [react-nashorn-example.js-http-client]
+  :aot [react-nashorn-example.js-api-fetcher]
   :aliases {"server" ["run" "-m" "react-nashorn-example.cli/run" "4567"]})
