@@ -5,10 +5,9 @@
             [optimus.optimizations :as optimizations]
             [optimus.strategies :as strategies]
             [hiccup.page :refer [html5]]
-            [compojure.core :refer [GET]]
-            cheshire.core
             ring.middleware.content-type
             ring.middleware.not-modified
+            [react-nashorn-example.web-api :as web-api]
             [react-nashorn-example.nashorn-utils :as nashorn-utils]))
 
 (defn get-shared-assets
@@ -50,29 +49,15 @@
   [nashorn]
   (.eval nashorn "__RENDER_NOT_FOUND()"))
 
-(def people-db
-  [{:id 1 :name "Hickey"}
-   {:id 2 :name "Dijkstra"}
-   {:id 3 :name "Sussman"}
-   {:id 4 :name "Steele"}
-   {:id 5 :name "Armstrong"}])
-
-(defn get-person
-  [db id]
-  (first (filter #(= (:id %) id) db)))
-
-(def api-handler
-  (compojure.core/routes
-   (GET "/api/people" [] {:status 200 :body (cheshire.core/generate-string people-db) :headers {"Content-Type" "application/json"}})
-   (GET "/api/people/:person-id" [person-id] (if-let [person (get-person people-db (Integer/parseInt person-id))]
-                                               {:status 200 :body (cheshire.core/generate-string person) :headers {"Content-Type" "application/json"}}))
-   (GET "/api/*" [person-id] {:status 404 :headers {"Content-Type" "application/json"} :body "{}"})))
-
 (defn web-handler
   [nashorn req]
   (if-let [react-html (get-react-html (:uri req) nashorn)]
     {:status 200 :headers {"Content-Type" "text/html"} :body (layout-page req react-html)}
     {:status 404 :headers {"Content-Type" "text/html"} :body (layout-page req (get-react-not-found-page nashorn))}))
+
+(defn compose-ring-handlers
+  [& handlers]
+  (fn [req] (some #(% req) handlers)))
 
 (defn create-app
   [config]
@@ -83,8 +68,8 @@
                  (map #(or (:contents %) (clojure.java.io/reader (:resource %)))
                       (optimizer (get-backend-assets) {})))]
     (->
-     (compojure.core/routes
-      api-handler
+     (compose-ring-handlers
+      web-api/handler
       (-> (partial web-handler nashorn)
           (optimus/wrap
            get-frontend-assets
