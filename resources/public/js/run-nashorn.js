@@ -26,7 +26,7 @@
         }
     }
 
-    GLOBAL.__RENDER_PAGE = function (url, urlsGetter) {
+    GLOBAL.__RENDER_PAGE = function (url) {
         var match = app.router.match(url);
         if (match) {
             return React.renderComponentToString(match.get(getProps(match.urls)))
