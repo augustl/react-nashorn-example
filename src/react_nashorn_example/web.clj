@@ -5,6 +5,8 @@
             [optimus.optimizations :as optimizations]
             [optimus.strategies :as strategies]
             [hiccup.page :refer [html5]]
+            [compojure.core :refer [GET]]
+            cheshire.core
             ring.middleware.content-type
             ring.middleware.not-modified)
   (:import [javax.script
@@ -14,7 +16,7 @@
 (defn get-shared-assets
   []
   (assets/load-bundle "public" "app.js"
-                      [#"/js/lib/.*js"
+                      [#"/js/lib/react.*\.js"
                        "/js/app.js"]))
 
 (defn get-backend-assets
@@ -29,7 +31,8 @@
   (concat
    (get-shared-assets)
    (assets/load-bundle "public" "browser.js"
-                       ["/js/run-browser.js"])))
+                       [#"/js/lib/when.*\.js"
+                        "/js/run-browser.js"])))
 
 (defn layout-page
   [req html]
@@ -57,16 +60,36 @@
   [nashorn]
   (.eval nashorn "__RENDER_NOT_FOUND()"))
 
+(def people-db
+  [{:id 1 :name "Hickey"}
+   {:id 2 :name "Dijkstra"}
+   {:id 3 :name "Sussman"}
+   {:id 4 :name "Steele"}
+   {:id 5 :name "Armstrong"}])
+
+(defn get-person
+  [db id]
+  (first (filter #(= (:id %) id) db)))
+
+(def api-handler
+  (compojure.core/routes
+   (GET "/api/people" [] {:status 200 :body (cheshire.core/generate-string people-db) :headers {"Content-Type" "application/json"}})
+   (GET "/api/people/:person-id" [person-id] (if-let [person (get-person people-db (Integer/parseInt person-id))]
+                                               {:status 200 :body (cheshire.core/generate-string person) :headers {"Content-Type" "application/json"}}))
+   (GET "/api/*" [person-id] {:status 404 :headers {"Content-Type" "application/json"} :body "{}"})))
+
+(defn web-handler
+  [nashorn req]
+  (if-let [react-html (get-react-html (:uri req) nashorn)]
+    {:status 200 :headers {"Content-Type" "text/html"} :body (layout-page req react-html)}
+    {:status 404 :headers {"Content-Type" "text/html"} :body (layout-page req (get-react-not-found-page nashorn))}))
+
 (defn create-app
   [config]
   (let [nashorn (.getEngineByName (ScriptEngineManager.) "nashorn")
         optimizer (if (= :dev (:env config))
                     optimizations/none
                     optimizations/all)]
-    ;; TODO: Use this stuffs to get http stuffs?
-    ; (.eval nashorn "var http = Java.type('react_nashorn_example.js_http_client')")
-    ;;(println (.eval nashorn "http.wat(1)"))
-
     ;; React expects either 'window' or 'global' to be around.
     (.eval nashorn "var global = this")
 
@@ -74,15 +97,14 @@
     (doseq [asset (optimizer (get-backend-assets) {})]
       (.eval nashorn (or (:contents asset) (clojure.java.io/reader (:resource asset)))))
     (->
-     (fn [req]
-       (if-let [react-html (get-react-html (:uri req) nashorn)]
-         {:status 200 :headers {"Content-Type" "text/html"} :body (layout-page req react-html)}
-         {:status 404 :headers {"Content-Type" "text/html"} :body (layout-page req (get-react-not-found-page nashorn))}))
-     (optimus/wrap
-      get-frontend-assets
-      optimizer
-      (if (= :dev (:env config))
-        strategies/serve-live-assets
-        strategies/serve-frozen-assets))
+     (compojure.core/routes
+      api-handler
+      (-> (partial web-handler nashorn)
+          (optimus/wrap
+           get-frontend-assets
+           optimizer
+           (if (= :dev (:env config))
+             strategies/serve-live-assets
+             strategies/serve-frozen-assets))))
      (ring.middleware.content-type/wrap-content-type)
      (ring.middleware.not-modified/wrap-not-modified))))

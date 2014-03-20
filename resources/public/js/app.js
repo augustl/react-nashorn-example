@@ -22,17 +22,16 @@
                 render: function () {
                     return React.DOM.a(
                         {onClick: this.gotoPerson, href: this.getPath()},
-                        "Go to person " + this.props.person.id);
+                        "Go to person " + this.props.person.name);
                 }
             });
 
             var HomePageComponent = React.createClass({
                 render: function () {
-                    var people = [{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id :5}];
                     return React.DOM.div(
                         null,
                         React.DOM.h1(null, "The home page!"),
-                        people.map(function (p) {
+                        this.props.people.map(function (p) {
                             return React.DOM.p({key: p.id}, PersonLinkComponent({person: p}))
                         }));
                 }
@@ -49,7 +48,7 @@
                 render: function () {
                     return React.DOM.div(
                         null,
-                        React.DOM.h1(null, "A person is a person. " + this.props.person.id),
+                        React.DOM.h1(null, "A person is a person. " + this.props.person.name),
                         React.DOM.a({onClick: this.gotoHome, href: this.getHomePath()}, "Back"));
                 }
             });
@@ -57,10 +56,12 @@
             app.matchRoute = function (url) {
                 if (url === "/") {
                     return {
-                        createComponent: function () {
-                            return HomePageComponent({})
+                        createComponent: function (props) {
+                            return HomePageComponent(props)
                         },
-                        params: {}
+                        urls: {
+                            people: "/api/people"
+                        }
                     }
                 }
 
@@ -68,18 +69,13 @@
                 if (match) {
                     var personId = match[1];
                     return {
-                        createComponent: function () {
-                            return PersonShowComponent({person: {id: personId}})
+                        createComponent: function (props) {
+                            return PersonShowComponent(props)
                         },
-                        params: {personId: personId}
+                        urls: {
+                            person: "/api/people/" + personId
+                        }
                     }
-                }
-
-                return {
-                    createComponent: function () {
-                        return app.getNotFoundComponent();
-                    },
-                    params: {}
                 }
             };
 
