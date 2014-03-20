@@ -73,13 +73,7 @@
         history.pushState(null, null, url);
     };
 
-    function renderCurrentPath() {
-        renderPath(location.pathname);
-    };
-
-    window.addEventListener("popstate", function(e) {
-        renderCurrentPath();
-    });
-
+    function renderCurrentPath() { renderPath(location.pathname); };
+    window.addEventListener("popstate", renderCurrentPath);
     renderCurrentPath();
 }());
