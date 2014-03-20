@@ -56,6 +56,7 @@
     {:status 404 :headers {"Content-Type" "text/html"} :body (layout-page req (get-react-not-found-page nashorn))}))
 
 (defn compose-ring-handlers
+  "Returns the response of the first ring handler in the list that returns non-nil."
   [& handlers]
   (fn [req] (some #(% req) handlers)))
 
