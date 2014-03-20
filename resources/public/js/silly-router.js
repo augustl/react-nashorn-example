@@ -1,6 +1,11 @@
 (function (GLOBAL) {
     "use strict";
 
+    /**
+     * A very small home made regexp based router. See app.js for an example. The router
+     * there is invoked with `app.router.match('/people/1')` and returns the React component
+     * for that page.
+     */
     var sillyRouter = {
         create: function (routes) {
             return {
