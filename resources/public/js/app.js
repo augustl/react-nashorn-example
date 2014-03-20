@@ -53,31 +53,14 @@
                 }
             });
 
-            app.matchRoute = function (url) {
-                if (url === "/") {
-                    return {
-                        createComponent: function (props) {
-                            return HomePageComponent(props)
-                        },
-                        urls: {
-                            people: "/api/people"
-                        }
-                    }
-                }
-
-                var match = url.match(/^\/people\/([^\/]+)$/);
-                if (match) {
-                    var personId = match[1];
-                    return {
-                        createComponent: function (props) {
-                            return PersonShowComponent(props)
-                        },
-                        urls: {
-                            person: "/api/people/" + personId
-                        }
-                    }
-                }
-            };
+            app.router = sillyRouter.create([
+                {path: /^\/$/,
+                 get: function (props) { return HomePageComponent(props); },
+                 urls: function () { return {people: "/api/people"}; } },
+                {path: /^\/people\/([^\/]+)$/,
+                 get: function (props) { return PersonShowComponent(props); },
+                 urls: function (match) { return {person: "/api/people/" + match[1]}; }}
+            ]);
 
             app.getNotFoundComponent = function () {
                 return NotFoundComponent({});

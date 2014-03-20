@@ -42,14 +42,14 @@
         }
     }
 
-    function renderRoute(route) {
-        resolveUrls(route.urls).then(
+    function renderRouteMatch(match) {
+        resolveUrls(match.urls).then(
             function (res) {
                 var props = {};
                 res.forEach(function (x) {
                     props[x.prop] = JSON.parse(x.body);
                 });
-                renderComponent(route.createComponent(props))
+                renderComponent(match.get(props))
             },
             function () {
                 // TODO: Only render not found if all requests were 404.
@@ -59,10 +59,10 @@
     };
 
     app.onLocationChangeRequested = function (url) {
-        var route = app.matchRoute(url);
+        var match = app.router.match(url);
 
-        if (route) {
-            renderRoute(route);
+        if (match) {
+            renderRouteMatch(match);
             history.pushState(null, null, url);
         } else {
             renderNotFound();
@@ -70,9 +70,10 @@
     };
 
     function renderCurrentPath() {
-        var route = app.matchRoute(location.pathname);
-        if (route) {
-            renderRoute(route);
+        var match = app.router.match(location.pathname);
+
+        if (match) {
+            renderRouteMatch(match);
         } else {
             renderNotFound();
         }

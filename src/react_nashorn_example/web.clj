@@ -14,7 +14,8 @@
   []
   (assets/load-bundle "public" "app.js"
                       [#"/js/lib/react.*\.js"
-                       "/js/app.js"]))
+                       "/js/app.js"
+                       "/js/silly-router.js"]))
 
 (defn get-backend-assets
   []

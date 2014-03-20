@@ -14,9 +14,9 @@
         }
         return result;
     }
-    function getProps(route) {
-        if (route.urls) {
-            var res = apiFetcher.resolveUrls(urlsToHashMap(route.urls));
+    function getProps(urls) {
+        if (urls) {
+            var res = apiFetcher.resolveUrls(urlsToHashMap(urls));
             var parsedRes = {};
             for (var prop in res) {
                 parsedRes[prop] = JSON.parse(res[prop])
@@ -27,9 +27,9 @@
     }
 
     GLOBAL.__RENDER_PAGE = function (url, urlsGetter) {
-        var route = app.matchRoute(url);
-        if (route) {
-            return React.renderComponentToString(route.createComponent(getProps(route)))
+        var match = app.router.match(url);
+        if (match) {
+            return React.renderComponentToString(match.get(getProps(match.urls)))
         }
     };
 
