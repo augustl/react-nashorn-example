@@ -4,6 +4,18 @@ This is a single page web app, where the initial page is also served as plain HT
 
 When you click links in the web site (and JS is enabled), the single page web app will do all the page loading with JS. But because the initial page (and all pages) is loaded from the backend, your app will be indexable by Google, and also really fast! You don't have to wait for the JS to load to see the content, since it's served statically from the backend.
 
+## Running
+
+You need JDK1.8, see next section if you don't have it.
+
+Run the app with:
+
+    lein server
+
+Then open http://localhost:4567 in a browser, and enjoy!
+
+Leiningen is Clojure's build tool, if you don't have it, see https://github.com/technomancy/leiningen
+
 ## Installing JDK1.8
 
 ### Linux
@@ -23,12 +35,6 @@ Please contribute a pull request :)
 ### Windows
 
 Please contribute a pull request :)
-
-## Running
-
-You need JDK1.8, see above. When you have it, run the app with `lein server`. Don't have leiningen? See https://github.com/technomancy/leiningen.
-
-Then open http://localhost:4567 in a browser, and enjoy!
 
 ## TODO
 
