@@ -12,9 +12,9 @@ Run the app with:
 
     lein server
 
-Then open http://localhost:4567 in a browser, and enjoy!
+Then open [http://localhost:4567](http://localhost:4567) in a browser, and enjoy!
 
-Leiningen is Clojure's build tool, if you don't have it, see https://github.com/technomancy/leiningen
+Leiningen is Clojure's build tool, if you don't have it, see [https://github.com/technomancy/leiningen](https://github.com/technomancy/leiningen)
 
 ## Installing JDK1.8
 
@@ -24,9 +24,9 @@ Use your package manager!
 
 Alternatively, if you don't want to replace your system java, do the following:
 
-* curl -LO -b oraclelicense=a http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.tar.gz
+* `curl -LO -b oraclelicense=a http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.tar.gz`
 * Extract
-* export PATH=/path/to/jdk1.8.0/bin:$PATH
+* `export PATH=/path/to/jdk1.8.0/bin:$PATH`
 
 ### Mac OS X
 
@@ -38,7 +38,7 @@ Please contribute a pull request :)
 
 ## Tradeoffs
 
-Your React code has to use plain JS only, and not invoke any 3rd party components that requires a DOM. Facebook React supports rendering to string without a DOM, which is what we actually do on the back-end. If a component invokes a jQuery plugin, you'll get an exception and the backend won't be able to render that page.
+Your React code has to use plain JS only, and not invoke any 3rd party components that requires a DOM. Facebook React supports rendering to a string without a DOM, which is what we actually do on the back-end. If a component invokes a jQuery plugin, you'll get an exception and the backend won't be able to render that page.
 
 I'm not an experienced React user, so I'm not sure how this problem is typically solved. Pull requests are welcome.
 
