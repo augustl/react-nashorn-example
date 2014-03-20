@@ -45,7 +45,6 @@ I'm not an experienced React user, so I'm not sure how this problem is typically
 ## TODO
 
 * Use a real router, not a simple if/return/regexp based home made thingie.
-* Actually get component state from API on server. We currently hardcode {id: personId}.
 
 ## Copyright
 
