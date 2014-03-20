@@ -1,25 +1,41 @@
 # react-nashorn-example
 
-First, aquire JDK1.8. On linux, you can do the following:
+This is a single page web app, where the initial page is also served as plain HTML, without any extra work or code duplication required!
+
+When you click links in the web site (and JS is enabled), the single page web app will do all the page loading with JS. But because the initial page (and all pages) is loaded from the backend, your app will be indexable by Google, and also really fast! You don't have to wait for the JS to load to see the content, since it's served statically from the backend.
+
+# Installing JDK1.8
+
+## Linux
+
+Use your package manager!
+
+Alternatively, if you don't want to replace your system java, do the following:
 
 * curl -LO -b oraclelicense=a http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.tar.g
 * Extract
 * export PATH=/path/to/jdk1.8.0/bin:$PATH
 
-If you're on OS X, I'm not sure what you need to do. You probably need to download an installer and replace your system Java. Please contribute a pull request if you have a solution fo OS X :)
+## Mac OS X
 
-Start the web server with:
+Please contribute a pull request :)
 
-* lein server
+## Windows
+
+Please contribute a pull request :)
+
+# Running
+
+You need JDK1.8, see above. When you have it, run the app with `lein server`. Don't have leiningen? See https://github.com/technomancy/leiningen.
 
 Then open http://localhost:4567 in a browser, and enjoy!
 
-## TODO
+# TODO
 
 * Use a real router, not a simple if/return/regexp based home made thingie.
 * Actually get component state from API on server. We currently hardcode {id: personId}.
 
-## Copyright
+# Copyright
 
 Copyright © 2014 August Lilleaas
 
