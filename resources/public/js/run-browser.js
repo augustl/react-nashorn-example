@@ -37,7 +37,7 @@
             return when.all(promises);
         } else {
             var deferred = when.defer();
-            deferred.resolve();
+            deferred.resolve([]);
             return deferred.promise;
         }
     }
