@@ -8,10 +8,8 @@
             [compojure.core :refer [GET]]
             cheshire.core
             ring.middleware.content-type
-            ring.middleware.not-modified)
-  (:import [javax.script
-            ScriptEngineManager
-            ScriptContext]))
+            ring.middleware.not-modified
+            [react-nashorn-example.nashorn-utils :as nashorn-utils]))
 
 (defn get-shared-assets
   []
@@ -44,17 +42,9 @@
     (map (fn [url] [:script {:src url}])
          (link/bundle-paths req ["app.js" "browser.js"]))]))
 
-(defn nashorn-bindings-append
-  [nashorn new-bindings]
-  (let [bindings (.createBindings nashorn)]
-    (doseq [[key value] new-bindings]
-      (.put bindings key value))
-    (.putAll bindings (.getBindings nashorn ScriptContext/ENGINE_SCOPE))
-    bindings))
-
 (defn get-react-html
   [uri nashorn]
-  (.eval nashorn "__RENDER_PAGE(url)" (nashorn-bindings-append nashorn {"url" uri})))
+  (.eval nashorn "__RENDER_PAGE(url)" (nashorn-utils/bindings-append nashorn {"url" uri})))
 
 (defn get-react-not-found-page
   [nashorn]
@@ -86,16 +76,12 @@
 
 (defn create-app
   [config]
-  (let [nashorn (.getEngineByName (ScriptEngineManager.) "nashorn")
-        optimizer (if (= :dev (:env config))
+  (let [optimizer (if (= :dev (:env config))
                     optimizations/none
-                    optimizations/all)]
-    ;; React expects either 'window' or 'global' to be around.
-    (.eval nashorn "var global = this")
-
-
-    (doseq [asset (optimizer (get-backend-assets) {})]
-      (.eval nashorn (or (:contents asset) (clojure.java.io/reader (:resource asset)))))
+                    optimizations/all)
+        nashorn (nashorn-utils/create-engine
+                 (map #(or (:contents %) (clojure.java.io/reader (:resource %)))
+                      (optimizer (get-backend-assets) {})))]
     (->
      (compojure.core/routes
       api-handler
