@@ -1,15 +1,4 @@
 (function () {
-    var app = MyApp.create();
-    var target = document.getElementById("app");
-
-    function renderComponent(component) {
-        React.renderComponent(component, target);
-    }
-
-    function renderNotFound(component) {
-        renderComponent(app.getNotFoundComponent());
-    }
-
     function getUrl(url) {
         var deferred = when.defer();
         var req = new XMLHttpRequest();
@@ -23,6 +12,17 @@
             }
         };
         return deferred.promise;
+    }
+
+    var app = MyApp.create();
+    var target = document.getElementById("app");
+
+    function renderComponent(component) {
+        React.renderComponent(component, target);
+    }
+
+    function renderNotFound(component) {
+        renderComponent(app.getNotFoundComponent());
     }
 
     function renderPath(path) {
