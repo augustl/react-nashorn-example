@@ -45,7 +45,10 @@ I'm not an experienced React user, so I'm not sure how this problem is typically
 
 ## TODO
 
+This is a POC. It would be nice with some kind of reusable library. That can probably happen when this todo-list becomes empty.
+
 * Use a real router, not a simple if/return/regexp based home made thingie.
+* Is it OK that the JS performs a request to the API for the data a second time, when the JS loads? Time has passed so you risk getting different data. Serializing the props used in the HTML is a possibility. Using Datomic is another, put the datomic T that was used by the backend in the HTML somewhere so the scripts can read and use it.
 
 ## Copyright
 
