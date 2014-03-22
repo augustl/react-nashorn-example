@@ -1,5 +1,7 @@
 # react-nashorn-example
 
+Blog post: http://augustl.com/blog/2014/jdk8_react_rendering_on_server/
+
 This is a single page web app, where the initial page is also served as plain HTML, without any extra work or code duplication required!
 
 When you click links in the web site (and JS is enabled), the single page web app will do all the page loading with JS. But because the initial page (and all pages) is loaded from the backend, your app will be indexable by Google, and also really fast! You don't have to wait for the JS to load to see the content, since it's served statically from the backend.
