@@ -25,27 +25,33 @@
         renderComponent(app.getNotFoundComponent());
     }
 
+    function fetchDataFromUrls(urls) {
+        if (urls) {
+            var promises = [];
+            for (var prop in urls) {
+                promises.push(when(getUrl(urls[prop]), function (req) {
+                    return {body: JSON.parse(req.responseText), prop: prop}
+                }));
+            }
+            return when(when.all(promises), function (res) {
+                var props = {};
+                res.forEach(function (x) { props[x.prop] = x.body; });
+                return props;
+            })
+        } else {
+            return when.resolve({});
+        }
+    }
+
     function renderPath(path) {
         var match = app.router.match(path);
         if (match) {
-            if (match.urls) {
-                var promises = [];
-                for (var prop in match.urls) {
-                    promises.push(when(getUrl(match.urls[prop]), function (req) {
-                        return {body: JSON.parse(req.responseText), prop: prop}
-                    }));
-                }
-                when.all(promises).then(function (res) {
-                    var props = {};
-                    res.forEach(function (x) { props[x.prop] = x.body; });
-                    renderComponent(match.get(props))
-                }, function () {
-                    // TODO: Only render not found if all requests were 404.
-                    renderNotFound();
-                });
-            } else {
-                renderComponent(match.get())
-            }
+            fetchDataFromUrls(match.urls).then(function (props) {
+                renderComponent(match.get(props))
+            }, function () {
+                // TODO: Only render not found if all requests were 404.
+                renderNotFound();
+            });
         } else {
             renderNotFound();
         }
